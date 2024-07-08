@@ -3,17 +3,19 @@ import "./App.css";
 import axios from "axios";
 
 function App() {
-  //add a loader
-  //const [loader, setLoader] = useState("false");
+  const [loader, setLoader] = useState(false);
   const [input, setInput] = useState("");
   const [result, setResult] = useState("");
 
   const fetchData = async () => {
     try {
+      setLoader(true);
       const res = await axios(`https://api.shrtco.de/v2/shorten?url=${input}`);
       setResult(res.data.result.full_short_link);
     } catch (err) {
       alert(err);
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -32,7 +34,7 @@ function App() {
         onChange={(e) => setInput(e.target.value)}
       />
       <button onClick={handleClick}>Submit</button>
-      <p>{result}</p>
+      {loader ? <p>Loading...</p> : result && <p>{result}</p>}
     </div>
   );
 }
